@@ -115,9 +115,9 @@ def test_print_all_V_UNION_cards(all_cards, doc):
         v_union_dict[card.name].append(card)
 
     for name, cards in v_union_dict.items():
-        doc.log(f"V-Union Name: {name}\n")
+        doc.log(f"V-Union Name: {name}")
         for i, card in enumerate(cards):
-            doc.log(doc.img(card.images.small), '\n' if i % 2 == 0 else '')
+            doc.log(doc.img(card.images.small), '\n\n' if i % 2 == 0 else '')
 
 
 
@@ -155,10 +155,3 @@ def doc_log_cards(doc, cards):
     doc.log("")
     for card in cards:
         doc.log(doc.img(card.images.small)," ")
-
-
-def doc_log_dict_of_cards(doc, dict_of_cards):
-    for key, cards in dict_of_cards.items():
-        doc.write(f"key: {key}\n")
-        doc_log_cards(cards)
-        doc.write("\n")
