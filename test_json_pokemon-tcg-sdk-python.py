@@ -43,8 +43,8 @@ def test_print_pokemons_that_can_elvolve_or_are_evolded(doc, cards_base123):
     doc.log(f"Limit to 9 first cards")
     for i in range(0,9):
             card = sorted_evolvings_cards[i]
-            doc.log("<br/>") if (card.subtypes is None or "Basic" in card.subtypes) else None
-            doc.log(doc.img(card.images.small))
+            doc.log("<br/>", "\n") if (card.subtypes is None or "Basic" in card.subtypes) else None
+            doc.log(doc.img(card.images.small)," ")
 
 
 def test_cardExtended_object_contain_level_attribute(doc, cards_base123):
