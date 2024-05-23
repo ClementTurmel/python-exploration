@@ -14,3 +14,6 @@ class CardExtented(Card):
 
     def __post_init__(self):
         self.set_id = self.id.split("-")[0]
+        
+        self.subtypes = [] if self.subtypes is None else self.subtypes
+        self.attacks  = [] if self.attacks  is None else self.attacks

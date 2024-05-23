@@ -12,3 +12,7 @@ All tests generate markdown documentation to help visualize.
 
 ## requirement
 `pip install -U pytest`
+
+## run
+execute `pytest` (or `python -m pytest`)
+you can see generated documentation in [documentation](documentation/) folder

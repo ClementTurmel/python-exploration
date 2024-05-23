@@ -43,7 +43,7 @@ def test_print_pokemons_that_can_elvolve_or_are_evolded(doc, cards_base123):
     doc.log(f"Limit to 9 first cards")
     for i in range(0,9):
             card = sorted_evolvings_cards[i]
-            doc.log("<br/>", "\n") if (card.subtypes is None or "Basic" in card.subtypes) else None
+            doc.log("<br/>", "\n") if "Basic" in card.subtypes else None
             doc.log(doc.img(card.images.small)," ")
 
 
@@ -85,6 +85,41 @@ def test_given_ponytas_sorted_by_counting_same_attacks_then_the_3_first_ponytas_
         == sorted_filtered_cards[1].attacks \
         == sorted_filtered_cards[2].attacks
 
+def test_print_card_with_no_attack(all_cards, doc):
+
+    creature_cards_without_attacks = [
+        card for card in all_cards 
+        if card.supertype == "Pokémon" 
+        and len(card.attacks) == 0
+    ]
+    print (f"Number of creature cards without attacks: {len(creature_cards_without_attacks)}")
+    doc_log_cards(doc, creature_cards_without_attacks)
+
+
+def test_print_all_cards_with_the_maximal_number_of_attacks(all_cards, doc):
+    doc.log("V union cards are not included")
+    non_v_union_cards = [card for card in all_cards if "V-UNION" not in card.subtypes]
+    max_attacks_count = max([len(card.attacks) for card in non_v_union_cards])
+    cards_with_max_attacks = [card for card in non_v_union_cards if len(card.attacks) == max_attacks_count]
+    
+    doc_log_cards(doc, cards_with_max_attacks)
+
+
+def test_print_all_V_UNION_cards(all_cards, doc):
+    v_union_cards = [card for card in all_cards if "V-UNION" in card.subtypes]
+
+    v_union_dict = {}
+    for card in v_union_cards:
+        if card.name not in v_union_dict:
+            v_union_dict[card.name] = []
+        v_union_dict[card.name].append(card)
+
+    for name, cards in v_union_dict.items():
+        doc.log(f"V-Union Name: {name}\n")
+        for i, card in enumerate(cards):
+            doc.log(doc.img(card.images.small), '\n' if i % 2 == 0 else '')
+
+
 
 
 ############## UTILITIES ##############
@@ -114,3 +149,16 @@ def load_json_sets():
 
 def get_set(set_id:str, sets:List[Set]):
     return [set for set in sets if set.id == set_id][0]
+
+
+def doc_log_cards(doc, cards):
+    doc.log("")
+    for card in cards:
+        doc.log(doc.img(card.images.small)," ")
+
+
+def doc_log_dict_of_cards(doc, dict_of_cards):
+    for key, cards in dict_of_cards.items():
+        doc.write(f"key: {key}\n")
+        doc_log_cards(cards)
+        doc.write("\n")
