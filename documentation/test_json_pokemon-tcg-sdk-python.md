@@ -70,3 +70,11 @@ V-Union Name: Morpeko V-UNION
 <img src="https://images.pokemontcg.io/swshp/SWSH287.png" alt="todo" height="150px"><img src="https://images.pokemontcg.io/swshp/SWSH288.png" alt="todo" height="150px">
 
 <img src="https://images.pokemontcg.io/swshp/SWSH289.png" alt="todo" height="150px"><img src="https://images.pokemontcg.io/swshp/SWSH290.png" alt="todo" height="150px">
+
+##### Test print all pikachu cards:
+
+There is 166 pikachu cards
+
+First one is <img src="https://images.pokemontcg.io/base1/58.png" alt="todo" height="150px"> release the 1999/01/09
+
+Last one is  <img src="https://images.pokemontcg.io/sv5/51.png" alt="todo" height="150px"> release the 2024/03/22

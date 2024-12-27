@@ -6,6 +6,7 @@ from typing import List
 import json
 from dacite import from_dict
 import os
+from datetime import datetime
 
 pokemon_tcg_data_folder = "pokemon_cards/pokemon-tcg-data-master"
 
@@ -120,6 +121,23 @@ def test_print_all_V_UNION_cards(all_cards, doc):
             doc.log(doc.img(card.images.small), '\n\n' if i % 2 == 0 else '')
 
 
+def test_print_all_pikachu_cards(all_cards, doc):
+    pikachu_cards = [card for card in all_cards if "pikachu" in card.name.lower()]
+    
+    sorted_pikachu_cards = sorted(
+        pikachu_cards, 
+        key=lambda x : datetime.strptime(x.set.releaseDate, "%Y/%m/%d")
+    )
+
+    doc.log(f"There is %s pikachu cards" % len(sorted_pikachu_cards))
+    doc.log("First one is")
+    doc_log_card(doc, sorted_pikachu_cards[0])
+    doc.log("release the %s" % sorted_pikachu_cards[0].set.releaseDate," ")
+    doc.log("Last one is ")
+    doc_log_card(doc, sorted_pikachu_cards[-1])
+    doc.log("release the %s" % sorted_pikachu_cards[-1].set.releaseDate," ")
+
+
 
 
 ############## UTILITIES ##############
@@ -154,4 +172,7 @@ def get_set(set_id:str, sets:List[Set]):
 def doc_log_cards(doc, cards):
     doc.log("")
     for card in cards:
-        doc.log(doc.img(card.images.small)," ")
+        doc_log_card(doc, card)
+
+def doc_log_card(doc, card):
+    doc.log(doc.img(card.images.small)," ")
