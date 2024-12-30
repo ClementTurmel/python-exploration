@@ -2,11 +2,10 @@ import pytest
 from pokemontcgsdk import *
 from markdown_writter import *
 from pokemon_cards.card_extended import CardExtented
-from typing import List
-import json
-from dacite import from_dict
 import os
 from datetime import datetime
+
+from utils import *
 
 pokemon_tcg_data_folder = "pokemon_cards/pokemon-tcg-data-master"
 
@@ -138,36 +137,40 @@ def test_print_all_pikachu_cards(all_cards, doc):
     doc.log("release the %s" % sorted_pikachu_cards[-1].set.releaseDate," ")
 
 
+def test_print_all_EX_V_GX_cards(all_cards, doc):
+    ex_cards = [card for card in all_cards if any(elem in ["EX", "V", "GX"] for elem in card.subtypes) and len(card.nationalPokedexNumbers) ==1]
+    sorted_ex_cards = sorted(
+        ex_cards, 
+        key=lambda x : x.nationalPokedexNumbers[0]
+    )
+    doc_log_cards(doc, sorted_ex_cards[:10])
 
+def test_print_all_artist_Yuka_Morii_cards(all_cards, doc):
+    artist_cards = [card for card in all_cards if card.artist == "Yuka Morii"]
+    sorted_artist_cards = sorted(
+        artist_cards, 
+        key=lambda x : x.nationalPokedexNumbers[0]
+    )
+    doc_log_cards(doc, sorted_artist_cards)
+
+@pytest.mark.skip(reason="to much cards")
+def test_print_first_card_of_each_national_pokedex_number(all_cards, doc):
+    cards_with_national_pokedex_numbers = [card for card in all_cards if card.nationalPokedexNumbers is not None and len(card.nationalPokedexNumbers) == 1]
+    cards_sorted_by_national_pokedex_numbers = sorted(
+        cards_with_national_pokedex_numbers, 
+        key=lambda x : x.nationalPokedexNumbers[0]
+    )
+
+    one_of_each_dict = {}
+    for card in cards_sorted_by_national_pokedex_numbers:
+        if card.nationalPokedexNumbers[0] not in one_of_each_dict:
+            one_of_each_dict[card.nationalPokedexNumbers[0]] = card
+
+    for national_pokedex_number, card in one_of_each_dict.items():
+        #doc.log(f"National Pokedex Number: {national_pokedex_number}")
+        doc_log_card(doc, card)
 
 ############## UTILITIES ##############
-
-def load_json_cards(set_name:List):
-    sets:list[Set] = load_json_sets()
-    cards:list[CardExtented] = []
-    for set_name in set_name:
-        with open(f"{pokemon_tcg_data_folder}/cards/en/{set_name}", mode="r", encoding="utf-8") as file:
-                json_data = json.load(file)
-                transformed_json_data = [CardExtented.transform(i) for i in json_data]
-                
-                for item in transformed_json_data:
-                    card = from_dict(CardExtented, item)
-                    card.set = get_set(card.set_id, sets)
-                    cards.append(card)
-
-    return cards
-
-def load_json_sets():
-    sets:list = []
-    with open(f"{pokemon_tcg_data_folder}/sets/en.json", mode="r", encoding="utf-8") as file:
-            json_data = json.load(file)
-            sets.extend([from_dict(Set, item) for item in json_data])
-    
-    return sets
-
-def get_set(set_id:str, sets:List[Set]):
-    return [set for set in sets if set.id == set_id][0]
-
 
 def doc_log_cards(doc, cards):
     doc.log("")
